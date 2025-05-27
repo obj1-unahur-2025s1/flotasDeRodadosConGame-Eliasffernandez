@@ -1,8 +1,15 @@
 import wollok.game.*
+import pedidos.*
+
 class Corsa {
   var property color 
-  var position = new Position(x=4,y=7) //game.at(0,0) otra manera de escribirlo  // var lista = [] / new List()
-  var pasoPor = []
+  var property position = new Position(x=4,y=7) //game.at(0,0) otra manera de escribirlo  // var lista = [] / new List()
+  var property pasoPor = []
+  method initialize(){
+    if(not coloresValidos.listaColores().contanins(color)){
+      self.error(color.toString() + "el auto no tiene un color válido") //toString para validar un string
+    }
+  }
   method pasajeros() = 4
   method velocidadMaxima()= 150
   method peso()= 1300
@@ -58,4 +65,8 @@ object pulenta{
 object bataton {
   method peso()= 500
   method velocidad()= 80
+}
+
+object coloresValidos{
+  const property listaColores = #{"rojo", "verde", "azul", "blanco", "negro"}
 }

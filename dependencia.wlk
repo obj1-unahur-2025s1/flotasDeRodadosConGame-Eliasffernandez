@@ -1,8 +1,17 @@
 import rodados.*
 class Dependencia {
-    const flota = []
+    const flota = [] 
+    const pedidos = #{}
     var property empleados = 0 
+
+    method agregarPedido(unPedido) {pedidos.add(unPedido)}
+    method quitarPedido(unPedido) {pedidos.remove(unPedido)}
+
+
     method agregarAFlota(rodado){
+        if(coloresValidos.listaColores().contains(rodado.color())){
+            self.error("el auto no tiene un color válido")
+        }
         flota.add(rodado)
     } 
     method quitarDeFlota(rodado){
@@ -24,4 +33,11 @@ class Dependencia {
     method capacidadDeLaFlota() =  flota.sum({r=> r.capacidad()})
 
     method esGrande() = empleados >= self.tieneAlMenosRodados(5)
+    method totalPasajerosEnPedidos() = pedidos.sum({p=> p.pasajeros()})
+    method pedidosNoPuedenSerSatisfechos() = pedidos.filter({p=> not self.hayAlgunRodadoQuePuedenSatisfacerElPedido(p)})
+    method hayAlgunRodadoQuePuedenSatisfacerElPedido(unPedido) = flota.any({r=>unPedido.puedeSatisfacer(r)})
+    method todosLosPedidosTienenIncompatibles(unColor) = pedidos.all({p=>p.coloresIncompatibles().contains(unColor)}) 
+    method relajarTodosLosPedidos() {
+        pedidos.forEach({p=>p.relajar()})
+    }
 }

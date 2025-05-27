@@ -1,10 +1,13 @@
 import dependencia.*
 import rodados.*
+import pedidos.*
 
 describe "test de rodados" {
   const deportes = new Dependencia(empleados=45)
   const cultura = new Dependencia(empleados=31)
   const cachito = new Corsa(color= "rojo")
+  const pedido1 = new Pedido(distancia=960, tiempoMaximo=8,pasajeros=4,coloresIncompatibles=#{"azul","negro"})
+  const pedido2 = new Pedido(distancia=961, tiempoMaximo=8,pasajeros=4,coloresIncompatibles=#{"azul","negro"})
   method initialize(){
     deportes.agregarAFlota(cachito)
     deportes.agregarAFlota(new Corsa(color="azul"))
@@ -18,7 +21,6 @@ describe "test de rodados" {
     cultura.agregarAFlota(trafic)
     cultura.interior(popular)
     cultura.motor(bataton)
-
   }
   test "peso total de deportes" {
     assert.equals(1300+1300+1300+1350+1200, deportes.pesoTotalFlota()) //6450
@@ -36,5 +38,34 @@ describe "test de rodados" {
     assert.equals(7, deportes.capacidadTotalEnColor("azul"))
   }
   //seguir los test 
-
+test "cachito puede satisfacer pedido1" {
+    assert.that(pedido1.puedeSatisfacer(cachito))    
+}
+test "cachito no puede satisfacer pedido1 si se agrega rojo a incompatibles"{
+    pedido1.agregarColorIncompatible("rojo")
+    assert.notThat(pedido1.puedeSatisfacer(cachito))
+}
+test "cachito no puede satisfacer pedido1 si el tiempo mas"{
+    pedido1.acelerar()
+    pedido1.acelerar()
+    assert.notThat(pedido1.puedeSatisfacer(cachito))
+}
+test"el total de pasajeros de los pedidos es 8"{
+  assert.equals(8, deportes.totalPasajerosEnPedidos())
+}
+test "el conjunto con el pedido2 no puede ser satisfecho"{
+  assert.equals(#{pedido2}, deportes.pedidosNoPuedenSerSatisfechos())
+}
+test"el pedido1 puede ser satisfecho por algun rodado"{
+  assert.that(deportes.hayAlgunRodadoQuePuedenSatisfacerElPedido(pedido1))
+}
+test"el pedido2 no puede ser satisfecho por ningun rodado"{
+  assert.notThat(deportes.hayAlgunRodadoQuePuedenSatisfacerElPedido(pedido2))
+}
+test "todos los pedidos tienen el azul como color incompatible"{
+  assert.that(deportes.todosLosPedidosTienenIncompatibles("azul"))
+}
+test "todos los pedidos no tienen el rojo como color incompatible"{
+  assert.notThat(deportes.todosLosPedidosTienenIncompatibles("rojo"))
+}
 }
